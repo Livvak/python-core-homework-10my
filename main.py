@@ -8,30 +8,97 @@ class Field:
         return str(self.value)
 
 class Name(Field):
-    # реалізація класу
-    pass
+    def __init__(self, name):
+        super().__init__(name)
+        if self.valid_name(name) == None:
+            self.name = ''
+        else:
+            self.name = name
+
+    def valid_name(self, name: str):
+        if len(name) < 3:
+            print("Имя не менее 3 знаков")
+            return
+        if not name.isalpha():
+            print("Имя должно состоять только из букв")
+            return
+        return name
 
 class Phone(Field):
     # реалізація класу
-    pass
+    def __init__(self, phone: str):
+        super().__init__(phone)
+
+        # self.phone = ''
+        # self.phone_for_check = phone
+        self.phone = self.valid_phone(phone)
+        # if self.valid_phone(phone) == None:
+        #     self.phone = ''
+
+    def valid_phone(self, phone: str):
+        if len(phone) != 10:
+            print("Номер не 10 знаков")
+            raise ValueError
+        if not phone.isdigit():
+            print("Номер долен состоять только из цифр")
+            raise ValueError
+        return phone
 
 class Record:
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
 
-    # реалізація класу
+    def add_phone(self, phone):
+        tel = Phone(phone)
+        if tel.valid_phone(phone):
+            self.phones.append(phone)
+
+    def remove_phone(self, phone):
+        if phone in self.phones:
+            self.phones.remove(phone)
+
+    def edit_phone(self, phone_old, phone_new):
+        if phone_old in self.phones:
+            idx = self.phones.index(phone_old)
+            self.phones.remove(phone_old)
+            self.phones.insert(idx, phone_new)
+    def find_phone(self, phone):
+        if phone in self.phones:
+            return phone
+        else:
+            return
+
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name.value}, phones: {'; '.join(self.phones)}"
 
 class AddressBook(UserDict):
-    # реалізація класу
-    pass
+    def __init__(self):
+        self.data = dict()
 
+    def add_record(self, obj):
+        self.data[str(obj.name)] = obj.phones
+        print(f"Ключ {obj.name} со значением {obj.phones} добавлено")
+
+    def find(self, name):
+        if name in self.data:
+            result = Record(name)
+            for phone in self.data[name]:
+                result.add_phone(phone)
+            # print(result.phones)
+            # result = f"Contact name: {name}, phones: {'; '.join(self.data[name])}"
+            return result
+
+    def delete(self, name):
+        if name in self.data:
+            del self.data[name]
+            print(f'{name} видалено')
+        else:
+            print(f'{name} не знайдено')
 
 def main():
-    pass
+
     # Створення нової адресної книги
     book = AddressBook()
 
@@ -67,5 +134,27 @@ def main():
 
 
 if __name__ == '__main__':
-        main()
-
+    main()
+    # book = AddressBook()
+    # ph = Phone('1234567800')
+    # print(ph.phone)
+    #
+    # bb = 'ddkh'
+    # imm = Name(bb)
+    # print(imm.name)
+    #
+    # john_record = Record("John")
+    # john_record.add_phone("1234567890")
+    # john_record.add_phone("5555555555")
+    # print(john_record.name)
+    # print(john_record.phones)
+    # book.add_record(john_record)
+    # print("="*30)
+    # john = book.find("John")
+    # print(john)
+    #
+    # book.delete("вв")
+    #
+    # # ddk = Record(imm.name)
+    # # ddk.add_phone(ph.phone)
+    # # print(ddk.phones)
