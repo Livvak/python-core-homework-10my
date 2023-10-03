@@ -32,6 +32,7 @@ class Phone(Field):
         # self.phone = ''
         # self.phone_for_check = phone
         self.phone = self.valid_phone(phone)
+
         # if self.valid_phone(phone) == None:
         #     self.phone = ''
 
