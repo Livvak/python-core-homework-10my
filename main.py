@@ -63,6 +63,10 @@ class Record:
             idx = self.phones.index(phone_old)
             self.phones.remove(phone_old)
             self.phones.insert(idx, phone_new)
+        else:
+            print("Номер не знайдено")
+            raise ValueError
+
     def find_phone(self, phone):
         if phone in self.phones:
             return phone
