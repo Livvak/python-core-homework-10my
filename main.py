@@ -50,50 +50,55 @@ class Record:
         self.name = Name(name)
         self.phones = []
 
+
     def add_phone(self, phone):
         tel = Phone(phone)
         if tel.valid_phone(phone):
-            self.phones.append(phone)
+            self.phones.append(tel)
 
     def remove_phone(self, phone):
-        if phone in self.phones:
-            self.phones.remove(phone)
+        tel = Phone(phone)
+        for item in self.phones:
+            if tel.phone == item.phone:
+                self.phones.remove(item)
 
     def edit_phone(self, phone_old, phone_new):
-        if phone_old in self.phones:
-            idx = self.phones.index(phone_old)
-            self.phones.remove(phone_old)
-            self.phones.insert(idx, phone_new)
-        else:
-            print("Номер не знайдено")
-            raise ValueError
+        tel_new = Phone(phone_new)
+        for item in self.phones:
+            if phone_old == item.phone:
+                idx = self.phones.index(item)
+                self.phones.remove(item)
+                self.phones.insert(idx, tel_new)
+                return
+            else:
+                print("Номер не знайдено")
+                raise ValueError
 
     def find_phone(self, phone):
-        if phone in self.phones:
-            return phone
-        else:
-            return
+        tel = Phone(phone)
+        for item in self.phones:
+            if tel.phone == item.phone:
+                return item
+
 
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(self.phones)}"
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
 
 class AddressBook(UserDict):
     def __init__(self):
         self.data = dict()
 
     def add_record(self, obj):
-        self.data[str(obj.name)] = obj.phones
+        self.data[str(obj.name)] = obj
         print(f"Ключ {obj.name} со значением {obj.phones} добавлено")
 
     def find(self, name):
-        if name in self.data:
-            result = Record(name)
-            for phone in self.data[name]:
-                result.add_phone(phone)
-            # print(result.phones)
-            # result = f"Contact name: {name}, phones: {'; '.join(self.data[name])}"
-            return result
+        _name = Name(name)
+        for key, val in self.data.items():
+            if _name.name == key:
+                result = val
+                return result
 
     def delete(self, name):
         if name in self.data:
